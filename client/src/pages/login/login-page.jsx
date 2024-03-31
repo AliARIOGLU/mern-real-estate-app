@@ -4,10 +4,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { appAxios } from "../../lib/appAxios";
+import { useAuth } from "../../context/auth-context";
 
 function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { updateUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -27,7 +30,7 @@ function LoginPage() {
         password,
       });
 
-      localStorage.setItem("user", JSON.stringify(res.data));
+      updateUser(res.data);
 
       if (res.data) {
         navigate("/");

@@ -1,11 +1,14 @@
 import "./profile-page.scss";
 
-import { Chat } from "../../components/chat/chat";
-import List from "../../components/list/list";
+import { Link, useNavigate } from "react-router-dom";
+
 import { appAxios } from "../../lib/appAxios";
-import { useNavigate } from "react-router-dom";
+import List from "../../components/list/list";
+import { Chat } from "../../components/chat/chat";
+import { useAuth } from "../../context/auth-context";
 
 function ProfilePage() {
+  const { currentUser, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -13,7 +16,7 @@ function ProfilePage() {
       const res = await appAxios.post("/auth/logout");
 
       if (res.data) {
-        localStorage.removeItem("user");
+        updateUser(null);
         navigate("/");
       }
     } catch (error) {
@@ -27,21 +30,20 @@ function ProfilePage() {
         <div className="wrapper">
           <div className="title">
             <h1>User Information</h1>
-            <button>Update Profile</button>
+            <Link to="/profile/update">
+              <button>Update Profile</button>
+            </Link>
           </div>
           <div className="info">
             <span>
               Avatar:{" "}
-              <img
-                src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Avatar"
-              />
+              <img src={currentUser.avatar || "/noavatar.jpg"} alt="Avatar" />
             </span>
             <span>
-              Username: <b>John Doe</b>
+              Username: <b>{currentUser.username}</b>
             </span>
             <span>
-              Email: <b>john@gmail.com</b>
+              Email: <b>{currentUser.email}</b>
             </span>
             <button onClick={handleLogout}>Logout</button>
           </div>
