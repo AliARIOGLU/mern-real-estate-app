@@ -1,11 +1,11 @@
-import "./login-page.scss";
+import "./register-page.scss";
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { appAxios } from "../../lib/appAxios";
 
-function LoginPage() {
+function Register() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,23 +14,23 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setIsLoading(true);
     setError("");
+    setIsLoading(true);
     const formData = new FormData(e.target);
 
     const username = formData.get("username");
+    const email = formData.get("email");
     const password = formData.get("password");
 
     try {
-      const res = await appAxios.post("/auth/login", {
+      const res = await appAxios.post("/auth/register", {
         username,
+        email,
         password,
       });
 
-      localStorage.setItem("user", JSON.stringify(res.data));
-
       if (res.data) {
-        navigate("/");
+        navigate("/login");
       }
     } catch (err) {
       console.log(err);
@@ -41,27 +41,18 @@ function LoginPage() {
   };
 
   return (
-    <div className="login">
+    <div className="register">
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <h1>Welcome back</h1>
-          <input
-            name="username"
-            required
-            minLength={3}
-            maxLength={20}
-            type="text"
-            placeholder="Username"
-          />
-          <input
-            name="password"
-            type="password"
-            required
-            placeholder="Password"
-          />
-          <button disabled={isLoading}>Login</button>
+          <h1>Create an Account</h1>
+          <input name="username" type="text" placeholder="Username" />
+          <input name="email" type="text" placeholder="Email" />
+          <input name="password" type="password" placeholder="Password" />
+          <button disabled={isLoading} type="submit">
+            Register
+          </button>
           {error && <span>{error}</span>}
-          <Link to="/register">Don&apos;t you have an account?</Link>
+          <Link to="/login">Do you have an account?</Link>
         </form>
       </div>
       <div className="img-container">
@@ -71,4 +62,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default Register;

@@ -1,8 +1,26 @@
-import { Chat } from "../../components/chat/chat";
-import List from "../../components/list/list";
 import "./profile-page.scss";
 
+import { Chat } from "../../components/chat/chat";
+import List from "../../components/list/list";
+import { appAxios } from "../../lib/appAxios";
+import { useNavigate } from "react-router-dom";
+
 function ProfilePage() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const res = await appAxios.post("/auth/logout");
+
+      if (res.data) {
+        localStorage.removeItem("user");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="profile-page">
       <div className="details">
@@ -25,6 +43,7 @@ function ProfilePage() {
             <span>
               Email: <b>john@gmail.com</b>
             </span>
+            <button onClick={handleLogout}>Logout</button>
           </div>
           <div className="title">
             <h1>My List</h1>
