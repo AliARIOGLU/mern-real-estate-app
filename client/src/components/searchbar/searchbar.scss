@@ -5,11 +5,10 @@
     button {
       padding: 16px 36px;
       border: 1px solid #999;
+      border-bottom: none;
       cursor: pointer;
       background-color: white;
       text-transform: capitalize;
-      transition: all 250ms ease-in;
-      border-bottom: none;
 
       &.active {
         background-color: black;
@@ -20,7 +19,6 @@
         border-top-left-radius: 5px;
         border-right: none;
       }
-
       &:last-child {
         border-top-right-radius: 5px;
         border-left: none;
@@ -38,7 +36,6 @@
     @include sm {
       flex-direction: column;
       border: none;
-      gap: 0;
     }
 
     input {
@@ -54,7 +51,6 @@
           width: 140px;
         }
       }
-
       @include md {
         width: 200px;
         &:nth-child(2),
@@ -74,23 +70,26 @@
       }
     }
 
-    button {
-      border: none;
-      cursor: pointer;
-      background-color: #fece51;
+    a {
       flex: 1;
+      background-color: #fece51;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      @include sm {
-        padding: 10px;
-      }
+      button {
+        border: none;
+        cursor: pointer;
+        background-color: #fece51;
 
-      @include lg {
-        min-width: 100px;
-      }
+        @include sm {
+          padding: 10px;
+        }
 
-      img {
-        height: 24px;
-        width: 24px;
+        img {
+          width: 24px;
+          height: 24px;
+        }
       }
     }
   }

@@ -11,6 +11,11 @@ import ProfilePage from "../pages/profile/profile-page";
 import LoginPage from "../pages/login/login-page";
 import RegisterPage from "../pages/register/register-page";
 import ProfileUpdatePage from "../pages/update/profile-update";
+import NewPostPage from "../pages/newpost/newpost-page";
+
+// loaders
+
+import { listPageLoader, singlePageLoader } from "../lib/loaders";
 
 const router = createBrowserRouter([
   {
@@ -24,10 +29,12 @@ const router = createBrowserRouter([
       {
         path: "/list",
         element: <ListPage />,
+        loader: listPageLoader,
       },
       {
         path: "/:id",
         element: <SinglePage />,
+        loader: singlePageLoader,
       },
 
       {
@@ -51,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/update",
         element: <ProfileUpdatePage />,
+      },
+      {
+        path: "/add",
+        element: <NewPostPage />,
       },
     ],
   },
