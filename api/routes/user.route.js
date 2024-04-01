@@ -1,14 +1,14 @@
 import express from "express";
 import {
   deleteUser,
-  getUser,
+  // getUser,
   getUsers,
   updateUser,
   savePost,
   profilePosts,
   getNotificationNumber,
 } from "../controllers/user.controller.js";
-import { verifyToken } from "../middleware/verifyToken.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 
