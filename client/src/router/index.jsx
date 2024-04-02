@@ -15,7 +15,11 @@ import NewPostPage from "../pages/newpost/newpost-page";
 
 // loaders
 
-import { listPageLoader, singlePageLoader } from "../lib/loaders";
+import {
+  listPageLoader,
+  profilePageLoader,
+  singlePageLoader,
+} from "../lib/loaders";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +58,7 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+        loader: profilePageLoader,
       },
       {
         path: "/profile/update",

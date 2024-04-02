@@ -1,13 +1,35 @@
 import "./single-page.scss";
 
-import { useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
+import { useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { Slider } from "../../components/slider/slider";
 import { Map } from "../../components/map/map";
+import { useAuth } from "../../context/auth-context";
+import { appAxios } from "../../lib/appAxios";
 
 function SinglePage() {
   const singlePostData = useLoaderData();
+  const [saved, setSaved] = useState(singlePostData.isSaved);
+  const { currentUser } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleSave = async () => {
+    setSaved((prevSaved) => !prevSaved);
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await appAxios.post("/users/save", { postId: singlePostData.id });
+    } catch (error) {
+      console.log(error);
+      setSaved((prevSaved) => !prevSaved);
+    }
+  };
 
   return (
     <div className="single-page">
@@ -120,9 +142,15 @@ function SinglePage() {
               <img src="/chat.png" alt="" />
               Send a Message
             </button>
-            <button>
+            <button
+              onClick={handleSave}
+              style={{
+                backgroundColor: saved ? "#fece51" : "white",
+                color: saved ? "white" : "black",
+              }}
+            >
               <img src="/save.png" alt="" />
-              Save the Place
+              {saved ? "Place Saved" : "Save the Place"}
             </button>
           </div>
         </div>

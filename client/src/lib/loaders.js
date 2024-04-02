@@ -1,3 +1,5 @@
+import { defer } from "react-router-dom";
+
 import { appAxios } from "./appAxios";
 
 export const singlePageLoader = async ({ _, params }) => {
@@ -5,8 +7,19 @@ export const singlePageLoader = async ({ _, params }) => {
   return res.data;
 };
 
-export const listPageLoader = async ({ request, params }) => {
+// defer work in only initial loading.
+
+export const listPageLoader = async ({ request }) => {
   const query = request.url.split("?")[1];
-  const res = await appAxios(`/posts?${query}`);
-  return res.data;
+  const postPromise = appAxios(`/posts?${query}`);
+  return defer({
+    postResponse: postPromise,
+  });
+};
+
+export const profilePageLoader = async () => {
+  const promiseResponse = appAxios("/users/profilePosts");
+  return defer({
+    postResponse: promiseResponse,
+  });
 };
