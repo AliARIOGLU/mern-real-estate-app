@@ -3,6 +3,10 @@ import "./card.scss";
 import { Link } from "react-router-dom";
 
 export const Card = ({ item }) => {
+  const isSaved = item?.savedPosts?.find(
+    (savedPost) => savedPost.postId === item.id
+  );
+
   return (
     <div className="card">
       <Link to={`/${item.id}`} className="image-container">
@@ -29,7 +33,12 @@ export const Card = ({ item }) => {
             </div>
           </div>
           <div className="icons">
-            <div className="icon">
+            <div
+              className="icon"
+              style={{
+                backgroundColor: isSaved ? "#fece51" : "white",
+              }}
+            >
               <img src="/save.png" alt="Save" />
             </div>
             <div className="icon">

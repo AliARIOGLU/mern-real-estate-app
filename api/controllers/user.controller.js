@@ -123,11 +123,18 @@ export const profilePosts = async (req, res) => {
   try {
     const userPosts = await prisma.post.findMany({
       where: { userId: tokenUserId },
+      include: {
+        savedPosts: true,
+      },
     });
     const saved = await prisma.savedPost.findMany({
       where: { userId: tokenUserId },
       include: {
-        post: true,
+        post: {
+          include: {
+            savedPosts: true,
+          },
+        },
       },
     });
 
