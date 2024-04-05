@@ -6,6 +6,7 @@ import format from "timeagojs";
 import { useAuth } from "../../context/auth-context";
 import { useSocket } from "../../context/socket-context";
 import { appAxios } from "../../lib/appAxios";
+import { useNotificationStore } from "../../lib/notification-store";
 
 export const Chat = ({ chats }) => {
   const [chat, setChat] = useState(null);
@@ -14,9 +15,14 @@ export const Chat = ({ chats }) => {
 
   const messageEndRef = useRef();
 
+  const decrease = useNotificationStore((state) => state.decrease);
+
   const handleOpenChat = async (id, receiver) => {
     try {
       const res = await appAxios(`/chats/${id}`);
+      if (!res.data.seenBy.includes(currentUser.id)) {
+        decrease();
+      }
       setChat({ ...res.data, receiver });
     } catch (error) {
       console.log(error);
