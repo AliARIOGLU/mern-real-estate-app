@@ -1,14 +1,18 @@
 import "./chat.scss";
 
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import format from "timeagojs";
 
 import { useAuth } from "../../context/auth-context";
+import { useSocket } from "../../context/socket-context";
 import { appAxios } from "../../lib/appAxios";
 
 export const Chat = ({ chats }) => {
   const [chat, setChat] = useState(null);
   const { currentUser } = useAuth();
+  const { socket } = useSocket();
+
+  const messageEndRef = useRef();
 
   const handleOpenChat = async (id, receiver) => {
     try {
@@ -34,32 +38,70 @@ export const Chat = ({ chats }) => {
         messages: [...prevChat.messages, res.data],
       }));
       e.target.reset();
+
+      socket.emit("sendMessage", {
+        receiverId: chat.receiver.id,
+        data: res.data,
+      });
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const read = async () => {
+      try {
+        await appAxios.put(`/chats/read/${chat.id}`);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (chat && socket) {
+      socket.on("getMessage", (data) => {
+        if (chat.id === data.chatId) {
+          setChat((prevChat) => ({
+            ...prevChat,
+            messages: [...prevChat.messages, data],
+          }));
+          read();
+        }
+      });
+    }
+
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [socket, chat]);
+
+  // scroll smoothly to messagebox bottom for every new message
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
 
   return (
     <div className="chat">
       <div className="messages">
         <h1>Messages</h1>
         {chats?.length === 0 && <p className="no-messages">No messages yet.</p>}
-        {chats?.map((chat) => (
+        {chats?.map((c) => (
           <div
-            key={chat.id}
+            key={c.id}
             className="message"
             style={{
-              backgroundColor: chat.seenBy.includes(currentUser.id)
-                ? "white"
-                : "#fecd514e",
+              backgroundColor:
+                c.seenBy.includes(currentUser.id) || chat?.id === c.id
+                  ? "white"
+                  : "#fecd514e",
             }}
-            onClick={() => handleOpenChat(chat.id, chat.receiver)}
+            onClick={() => handleOpenChat(c.id, c.receiver)}
           >
-            <img src={chat.receiver.avatar || "/noavatar.jpg"} alt="" />
-            <span>{chat.receiver.username}</span>
-            <p>{chat.lastMessage}</p>
+            <img src={c.receiver.avatar || "/noavatar.jpg"} alt="" />
+            <span>{c.receiver.username}</span>
+            <p>{c.lastMessage}</p>
           </div>
         ))}
+        <div ref={messageEndRef}></div>
       </div>
       {chat && (
         <div className="chat-box">
