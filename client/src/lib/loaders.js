@@ -18,8 +18,11 @@ export const listPageLoader = async ({ request }) => {
 };
 
 export const profilePageLoader = async () => {
-  const promiseResponse = appAxios("/users/profilePosts");
+  const postPromise = appAxios("/users/profilePosts");
+  const chatPromise = appAxios("/chats");
+
   return defer({
-    postResponse: promiseResponse,
+    postResponse: postPromise,
+    chatResponse: chatPromise,
   });
 };

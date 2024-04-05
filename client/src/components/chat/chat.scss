@@ -10,6 +10,11 @@
     gap: 20px;
     overflow-y: scroll;
 
+    .no-messages {
+      color: gray;
+      font-size: 18px;
+    }
+
     h1 {
       font-weight: 300;
     }
