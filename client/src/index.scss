@@ -13,3 +13,24 @@ body {
   font-family: "Lato", sans-serif;
   overflow: hidden;
 }
+
+/* Genel scroll stili */
+::-webkit-scrollbar {
+  width: 10px; /* Scroll çubuğu genişliği */
+}
+
+/* Scroll çubuğu arka planı */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Scroll çubuğu ok işaretleri */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
